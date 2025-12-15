@@ -15,6 +15,8 @@ import AdminHome from "./admin/pages/AdminHome"
 import { AdminBooks } from "./admin/pages/AdminBooks"
 import AdminSettings from "./admin/pages/AdminSettings"
 import ViewBooks from "./users/pages/ViewBooks"
+import PAymentError from "./users/components/PAymentError"
+import PaymentSuccess from "./users/components/PaymentSuccess"
 
 
 function App() {
@@ -38,6 +40,8 @@ function App() {
         <Route path="/all-books" element={<AllBooks />} />
         <Route path="/view-book/:id" element={<ViewBooks />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/payment-Error" element={<PAymentError />} />
+        <Route path="/payment-success" element={<PaymentSuccess />} />
         <Route path="*" element={<Pagenotfound />} />
 
         <Route path="/admin-home" element={loading ? <AdminHome /> : <Preloader />} />

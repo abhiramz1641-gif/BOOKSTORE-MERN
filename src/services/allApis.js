@@ -69,10 +69,16 @@ export const deleteBookApi= async(id)=>{
 
 }
 
+export const makePaymentApi= async(reqBody,reqHeader)=>{
+
+   return await commonApi("put",`${serverURL}/make-payment`,reqBody,reqHeader)
+
+}
 
 
 
-//..........adin.........
+
+//..........admin.........
 
 export const allBooksAdminApi= async(reqHeader)=>{
 

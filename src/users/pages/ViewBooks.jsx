@@ -2,13 +2,15 @@ import { faEye, faX } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { viewBookApi } from '../../services/allApis';
+import { makePaymentApi, viewBookApi } from '../../services/allApis';
 import { serverURL } from '../../services/serverURL';
+import { loadStripe } from '@stripe/stripe-js';
 
 const ViewBooks = () => {
 
     const [modal, setModal] = useState(false)
     const [book, setBook] = useState({})
+    const [token, setToken] = useState('')
 
     const { id } = useParams()
 
@@ -24,11 +26,44 @@ const ViewBooks = () => {
 
         }
 
+
+    }
+
+
+    const makePayment = async () => {
+
+
+        const stripe = await loadStripe('pk_test_51SeWyOIed9e3yjkH3JW53VihednaKW2bNzN4Xz5gMI8BSoDlh2uJFCJXmCYGO6Gm8GTLHTYXMd9xupzC616pZ4LO00yUXqMbol');
+
+        const reqBody = {
+            bookDetails: book
+        }
+        const reqHeader = {
+            'Authorization': `Bearer ${token}`
+        }
+
+        const result= await makePaymentApi(reqBody,reqHeader)
+        console.log(result);
+
+        const checkOutUrl=result?.data?.url
+
+        if(checkOutUrl){
+
+            window.location.href=checkOutUrl
+
+        }else{
+            alert("something went wrong.")
+        }
+
     }
 
     useEffect(() => {
 
         viewBook(id)
+        if (sessionStorage.getItem('token')) {
+            const token = sessionStorage.getItem('token')
+            setToken(token)
+        }
 
     }, [])
 
@@ -80,7 +115,7 @@ const ViewBooks = () => {
                         <div className=' mt-5 clear-both flex justify-end'>
                             <div className=' flex gap-2'>
                                 <button className=' p-2 bg-red-600 text-white rounded'>Close</button>
-                                <button className=' p-2 bg-green-600 text-white rounded'>Buy</button>
+                                <button onClick={makePayment} className=' p-2 bg-green-600 text-white rounded'>Buy</button>
                             </div>
                         </div>
 
